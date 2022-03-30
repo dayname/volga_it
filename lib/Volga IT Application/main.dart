@@ -40,7 +40,7 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
     collectData();
   }
-  List <Company> companies = [];
+  List<Company> companies = [];
   List<String> companyNames = ["BTC/USDT", "ETH/USDT", "EUR/USD", "GBP/USD", "AAPL", "MSFT", "AMZN"];
 
   Widget build(BuildContext context) {
@@ -60,43 +60,46 @@ class _MyHomePageState extends State<MyHomePage> {
 
  Widget createListView() {
     return
-      RefreshIndicator(
-        onRefresh: () async{
-          companies=[];
-          await collectData();
-          setState(() {});
-          return Future.value();
-        }, child: ListView.builder(
-          itemCount: companies.length,
-          itemBuilder: (BuildContext context, int index) {
-            return
-              Column(
-                children: [
-                  ListTile(
-                    leading: (companies[index].change >= 0) ? Icon(Icons.keyboard_arrow_up, color: Colors.green, size: 40,) : Icon(Icons.keyboard_arrow_down, color: Colors.red, size: 40,),
-                    title: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(companyNames[index],  style: const TextStyle(fontSize: 20)),
-                        Text("${companies[index].current} ", style: const TextStyle(fontSize: 20)),
+      Padding(
+        padding: const EdgeInsets.only(top: 6),
+        child: RefreshIndicator(
+          onRefresh: () async{
+            companies=[];
+            await collectData();
+            setState(() {});
+            return Future.value();
+          }, child: ListView.builder(
+            itemCount: companies.length,
+            itemBuilder: (BuildContext context, int index) {
+              return
+                Column(
+                  children: [
+                    ListTile(
+                      leading: (companies[index].change >= 0) ? Icon(Icons.keyboard_arrow_up, color: Colors.green, size: 40,) : Icon(Icons.keyboard_arrow_down, color: Colors.red, size: 40,),
+                      title: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(companyNames[index],  style: const TextStyle(fontSize: 20)),
+                          Text("${companies[index].current} ", style: const TextStyle(fontSize: 20)),
 
-                      ],
+                        ],
+                      ),
+                      subtitle: (companies[index].change >= 0) ? Row(
+                        children: [
+                          Text("${companies[index].percentChange}%", style: const TextStyle(fontSize: 20, color: Colors.green)),
+                          Text("  (${companies[index].change})", style: const TextStyle(fontSize: 16        , color: Colors.green)),
+                        ],
+                      ) : Row(
+                        children: [
+                          Text("${companies[index].percentChange}%", style: const TextStyle(fontSize: 20, color: Colors.red)),
+                          Text("  (${companies[index].change})", style: const TextStyle(fontSize: 16         , color: Colors.red)),
+                        ],
+                      ),
                     ),
-                    subtitle: (companies[index].change >= 0) ? Row(
-                      children: [
-                        Text("${companies[index].percentChange}%", style: const TextStyle(fontSize: 20, color: Colors.green)),
-                        Text("  (${companies[index].change})", style: const TextStyle(fontSize: 16        , color: Colors.green)),
-                      ],
-                    ) : Row(
-                      children: [
-                        Text("${companies[index].percentChange}%", style: const TextStyle(fontSize: 20, color: Colors.red)),
-                        Text("  (${companies[index].change})", style: const TextStyle(fontSize: 16         , color: Colors.red)),
-                      ],
-                    ),
-                  ),
-                  const Divider(),
-                ],
-              );
-          }),
+                    const Divider(),
+                  ],
+                );
+            }),
+        ),
       );
   }
 
